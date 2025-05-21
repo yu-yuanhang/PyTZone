@@ -1,0 +1,118 @@
+#include "./ops/Conv.h"
+
+using std::array;
+using std::vector;
+/* namespace py = pybind11; */
+
+
+using namespace PyTZone;
+using namespace PyTZone::core;
+
+void pybind11_enums(pybind11::module_ &m) {
+    // py::enum_<LAYER_TYPE>(m, "LAYER_TYPE")
+    //     .value("NULLTYPE", LAYER_TYPE::NULLTYPE)
+    //     .value("CONV", LAYER_TYPE::CONV)
+    //     .export_values();  // 允许通过 LAYER_TYPE.NULLTYPE 访问
+    py::enum_<PADDING_MODE>(m, "PADDING_MODE")
+        .value("ZEROS", PADDING_MODE::ZEROS)
+        .export_values();  // 允许通过 PADDING_MODE.ZEROS 访问
+}
+
+// pybind11 不支持直接绑定未实例化的模板类
+// 因此需要为具体的模板实例化进行绑定
+void pybind11_CustomArrays(pybind11::module_ &m) {
+    py::class_<CustomArray_def<size_t, 2, 1>>(m, "CustomArray_def<size_t, 2, 1>")
+        .def(py::init<const std::vector<size_t> &>());
+    py::class_<CustomArray_def<size_t, 2, 0>>(m, "CustomArray_def<size_t, 2, 0>")
+        .def(py::init<const std::vector<size_t> &>());
+    py::class_<CustomArray<size_t, 2>>(m, "CustomArray<size_t, 2>")
+        .def(py::init<const std::vector<size_t> &>());
+}
+
+// 设置为友元函数 无法解决 pybind11 访问权限受限的问题 
+// 本项目也并不建议直接创建 Layer 或 ConvNd 的实例
+// 这里直接选择不绑定基类的构造函数
+void pybind11_Conv2d(pybind11::module_ &m) {
+    // py::nodelete 是 pybind11 中提供的一种策略 表示对象不应被自动销毁 
+    // 即当 Python 解释器不再使用对象时 不会调用该对象的析构函数
+    py::class_<Layer, std::unique_ptr<Layer, py::nodelete>>(m, "Layer");
+        // .def(py::init<>());
+    // 绑定 ConvNd 类 继承自 Layer
+    py::class_<ConvNd, Layer, std::unique_ptr<ConvNd, py::nodelete>>(m, "ConvNd");
+        // .def(py::init<>());
+    // 这里涉及到 pybind11 对于继承关系中基类的可见性 所以需要绑定基类 
+    py::class_<Conv2d, ConvNd>(m, "Conv2d")
+        // 绑定构造函数，可以使用 'py::arg()'为构造函数参数命名 并且可以提供默认值
+        // pybind11 使用了 py::init<...>() 模板函数来绑定 C++ 类的构造函数
+        .def(py::init<size_t, size_t,
+                      const vector<size_t> &,
+                      const vector<size_t> &,
+                      const vector<size_t> &,
+                      const vector<size_t> &,
+                      int, int,
+                      PADDING_MODE>(), 
+                      // 这里下面参数要写齐(包括没有默认值的参数)
+                      py::arg("channel"),
+                      py::arg("num"),
+                      py::arg("size"),
+                      py::arg("stride") = vector<size_t>(), 
+                      py::arg("padding") = vector<size_t>(),
+                      py::arg("dilation") = vector<size_t>(),
+                      py::arg("groups") = 1,
+                      py::arg("isBias") = true,
+                      py::arg("padding_mode") = ZEROS)
+        // static_cast: C++ 的强制类型转换操作 用于在存在多个重载时选择特定版本的函数
+        // 以下为 const 版本成员函数的设置 as demo
+        /* .def("__call__", static_cast<at::Tensor (Conv2d::*)(at::Tensor) const>(&Conv2d::operator())) */
+        // .def("__call__", static_cast<at::Tensor (Conv2d::*)(at::Tensor &)>(&Conv2d::operator()))
+        // .def("__call__", static_cast<at::Tensor (Conv2d::*)()>(&Conv2d::operator()));  
+        .def("__call__", static_cast<void (Conv2d::*)(at::Tensor &)>(&Conv2d::operator()))
+        .def("__call__", static_cast<void (Conv2d::*)()>(&Conv2d::operator()));  
+
+
+        // 对于普通的成员函数
+        /* .def("forward", &Conv2d::forward, py::arg("input")) */
+        // 绑定只读属性
+        /* .def_property_readonly("in_channels", &Conv2d::in_channels) */
+        /* .def_property_readonly("out_channels", &Conv2d::out_channels); */
+}
+
+PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {	// 绑定部分
+// TORCH_LIBRARY(my_extension, m) {
+
+    // pybind11_CustomArrays(m);
+    pybind11_enums(m);
+    pybind11_Conv2d(m);
+
+    // ==================================================================================
+    // ==================================================================================
+    // ==================================================================================
+    /* m.def("relu_ca", &relu_ca_forward, "ReLU_ca forward"); */
+    /* m.def("MaxPool2d_ca", &MaxPool2d_ca_forward, "MaxPool2d_ca forward"); */
+    /* m.def("Conv2d_ca", &Conv2d_ca_forward, "Conv2d_ca forward"); */
+    /* m.def("func", &func, "Conv2d_ca forward"); */
+
+    // m.def("my_function", static_cast<void(*)(size_t, size_t)>(&my_function),
+    //     pybind11::arg("a") = 10, pybind11::arg("b") = 20,
+    //     "Conv2d_ca forward");
+
+    /* m.def("my_function", static_cast<void(*)(const std::vector<size_t> &)>(&my_function), */
+    /*         pybind11::arg("vec") = std::vector<size_t>(), */
+    /*         "Conv2d_ca forward"); */
+
+    // m.def("my_function", static_cast<void(*)()>(&my_function), "Conv2d_ca forward");
+    // m.def("my_function", &my_function, "Conv2d_ca forward");
+    // m.def("Point", &Point::func, "Conv2d_ca forward_from_Point");
+    // m.def("Point", []() {
+    //     return py::cpp_function(&Point::func);
+    // }, "A function that returns a function.");
+    
+    /* py::class_<Point>(m, "Point") */
+    /*     .def(py::init<size_t, size_t, double, std::string>())  // 绑定构造函数 */
+    /*     .def("__call__", &Point::operator());                  // 绑定函数调用运算符 */
+        //.def("func", &func);  // 绑定成员函数
+    // ==================================================================================
+    // ==================================================================================
+    // ==================================================================================
+}
+

@@ -1,0 +1,17 @@
+2024-09-18 22:11:17,356 cat [DEBUG] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:14] this is an error message!
+2024-09-18 22:11:17,356 cat [INFO] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:15] this is an error message!
+2024-09-18 22:11:17,356 cat [WARN] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:16] this is an error message!
+2024-09-18 22:11:17,356 cat [ERROR] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:17] this is an error message!
+2024-09-18 22:15:29,690 cat [ERROR] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:17] this is an error message!
+2024-09-18 22:56:54,993 cat [DEBUG] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:16] this is an error message!
+2024-09-18 22:56:54,993 cat [INFO] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:17] this is an error message!
+2024-09-18 22:56:54,993 cat [WARN] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:18] this is an error message!
+2024-09-18 22:56:54,993 cat [ERROR] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:19] this is an error message!
+2024-09-19 00:13:33,366 cat [DEBUG] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:16] this is an error message!
+2024-09-19 00:13:33,366 cat [INFO] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:17] this is an error message!
+2024-09-19 00:13:33,366 cat [WARN] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:18] this is an error message!
+2024-09-19 00:13:33,366 cat [ERROR] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:19] this is an error message!
+2024-09-19 00:13:52,741 cat [DEBUG] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:16] this is an error message!
+2024-09-19 00:13:52,741 cat [INFO] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:17] this is an error message!
+2024-09-19 00:13:52,741 cat [WARN] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:18] this is an error message!
+2024-09-19 00:13:52,741 cat [ERROR] [/home/yyh/2.Programs/3.workplace/3.pytorch/2.demo/cppExtension/CppExt/RunMgr.cc:main:19] this is an error message!
